@@ -40,6 +40,12 @@ class Classroom
      */
     private $projects;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Cohort::class, inversedBy="classrooms")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $cohort;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -131,6 +137,18 @@ class Classroom
                 $project->setClassroom(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCohort(): ?Cohort
+    {
+        return $this->cohort;
+    }
+
+    public function setCohort(?Cohort $cohort): self
+    {
+        $this->cohort = $cohort;
 
         return $this;
     }

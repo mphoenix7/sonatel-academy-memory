@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CohortRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class Cohort
      * @ORM\Column(type="boolean")
      */
     private $isActif;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Classroom::class, mappedBy="cohort", orphanRemoval=true)
+     */
+    private $classrooms;
+
+    public function __construct()
+    {
+        $this->classrooms = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,36 @@ class Cohort
     public function setIsActif(bool $isActif): self
     {
         $this->isActif = $isActif;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Classroom[]
+     */
+    public function getClassrooms(): Collection
+    {
+        return $this->classrooms;
+    }
+
+    public function addClassroom(Classroom $classroom): self
+    {
+        if (!$this->classrooms->contains($classroom)) {
+            $this->classrooms[] = $classroom;
+            $classroom->setCohort($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClassroom(Classroom $classroom): self
+    {
+        if ($this->classrooms->removeElement($classroom)) {
+            // set the owning side to null (unless already changed)
+            if ($classroom->getCohort() === $this) {
+                $classroom->setCohort(null);
+            }
+        }
 
         return $this;
     }
