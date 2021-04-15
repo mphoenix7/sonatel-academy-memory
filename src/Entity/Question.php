@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\QuestionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\QuestionRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
  */
 class Question
