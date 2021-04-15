@@ -27,6 +27,7 @@
         "symfony/framework-bundle": "5.2.*",
         "symfony/maker-bundle": "^1.30",
         "symfony/monolog-bundle": "^3.0",
+        "symfony/notifier": "5.2.*",
         "symfony/property-access": "5.2.*",
         "symfony/property-info": "5.2.*",
         "symfony/proxy-manager-bridge": "5.2.*",
