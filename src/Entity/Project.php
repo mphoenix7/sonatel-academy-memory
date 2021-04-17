@@ -63,6 +63,11 @@ class Project
      */
     private $question;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActif;
+
     public function __construct()
     {
         $this->deliverables = new ArrayCollection();
@@ -202,6 +207,18 @@ class Project
                 $question->setProject(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsActif(): ?bool
+    {
+        return $this->isActif;
+    }
+
+    public function setIsActif(bool $isActif): self
+    {
+        $this->isActif = $isActif;
 
         return $this;
     }
