@@ -1,9 +1,9 @@
 <?php 
-namespace App\Event ;
+namespace App\Events ;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class JWTCreatedListener 
 {

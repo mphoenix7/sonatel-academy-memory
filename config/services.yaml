@@ -27,7 +27,7 @@ services:
     resource: "../src/Controller/"
     tags: ["controller.service_arguments"]
   acme_api.event.jwt_authenticated_listener:
-    class: App\Event\JWTCreatedListener
+    class: App\Events\JWTCreatedListener
     tags:
       - {
           name: kernel.event_listener,
