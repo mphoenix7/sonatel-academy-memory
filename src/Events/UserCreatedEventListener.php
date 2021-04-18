@@ -1,7 +1,6 @@
 <?php 
 
 namespace App\Events;
-
 use App\Entity\User;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
@@ -13,18 +12,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
-
 class UserCreatedEventListener implements EventSubscriberInterface {
     /**
-     * Undocumented variable
-     *
      * @var UserPasswordEncoderInterface
      */
     private $encoder;
     /**
-     * Undocumented variable
-     *
      * @var Security
      */
     private $security;
@@ -37,16 +30,10 @@ class UserCreatedEventListener implements EventSubscriberInterface {
     private $mailer;
 
     public function __construct( MailerInterface $mailer , UserPasswordEncoderInterface $encoder , Security $security){
-
         $this->encoder  = $encoder;
-
-        $this->security = $security; 
-
+        $this->security = $security;
         $this->mailer   = $mailer;
-
-
     }
-
 
     /**
      * Branchement sur l'evenement kernel view \
@@ -55,27 +42,24 @@ class UserCreatedEventListener implements EventSubscriberInterface {
      *
      * @return void
      */
-    public static function getSubscribedEvents() {
-
+    public static function getSubscribedEvents():array {
         return [
             KernelEvents::VIEW => ['passwordEncoder',EventPriorities::PRE_WRITE]
         ];
     }
-     /**
-      * intervention sur la creaion du mot de passe pour l'encoder
-      *
-      * @param ViewEvent $event
-      * @return void
-      */
+
+    /**
+     * intervention sur la creaion du mot de passe pour l'encoder
+     *
+     * @param ViewEvent $event
+     * @return void
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     */
     public function passwordEncoder (ViewEvent $event){
         if($this->security->getUser()->getRoles() == ['ROLE_ADMIN'] || $this->security->getUser()->getRoles() == ["ROLE_COACH"] ){
-
             $subject = $event->getControllerResult();
-
             $method = $event->getRequest()->getMethod();
-
             $password = uniqid();
-
             $generatedpassword = $password;
 
             if ($subject instanceof User && $method === 'POST'){
@@ -84,6 +68,7 @@ class UserCreatedEventListener implements EventSubscriberInterface {
 
                 $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
 
+                //Envoie de l'email à l'utilisateur 
                 $email = (new Email())
                        ->from("sonatel-academy@mail.com")
                        ->to($subject->getEmail())
@@ -91,14 +76,16 @@ class UserCreatedEventListener implements EventSubscriberInterface {
                        ->text("Veuillez vous connecter avec votre email et ce mot de passe {$generatedpassword}");
                 $this->mailer->send($email);
                 
-            }    
-            
+            }
+            if($subject instanceof User && $event->getRequest()->getMethod() === "PUT") {
+                if(!empty($subject->getPassword())){
+                    $subject->setPassword($this->encoder->encodePassword($subject, $subject->getPassword()));
+                }
+
+            }
         }
         else {
             throw new AccessDeniedException("Tu n'est pas authoriser à effectuer cette operation");
         }
-        
-        
     }
-
 }

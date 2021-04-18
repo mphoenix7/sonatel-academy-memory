@@ -7,11 +7,14 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("email", message="cet email existe deja")
  */
 class User implements UserInterface
 {
@@ -24,6 +27,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="ce champs est obligatoire")
      */
     private $email;
 
@@ -40,16 +44,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="ce champs est obligatoire")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="ce champs est obligatoire")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="ce champs est obligatoire")
      */
     private $phoneNumber;
 
@@ -65,6 +72,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\NotBlank(message="ce champs ne peut pas etre nul")
      */
     private $isActif;
 
@@ -76,6 +84,7 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="user")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="ce champs ne peut pas etre nul")
      */
     private $profil;
 
