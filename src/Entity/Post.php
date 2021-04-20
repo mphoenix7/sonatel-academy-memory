@@ -7,10 +7,14 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert ;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"post_read"}}
+ * )
  */
 class Post
 {
@@ -18,27 +22,33 @@ class Post
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"post_read","comment_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"post_read","comment_read"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"post_read","comment_read"})
+     * @Assert\NotBlank(message="Ce champs ne peut pas etre vide")
      */
     private $description;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime",nullable=true)
+     * @Groups({"post_read","comment_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"post_read","comment_read"})
      */
     private $user;
 

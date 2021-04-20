@@ -7,9 +7,13 @@ use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert ;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"project_read"}}
+ * )
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
  */
 class Project
@@ -18,53 +22,64 @@ class Project
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"project_read","question_read","deliverable_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"project_read","question_read","deliverable_read"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"project_read","question_read","deliverable_read"})
+     * @Assert\NotBlank(message="Ce champs ne peut pas etre vide")
      */
     private $description;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime",nullable=false)
+     * @Groups({"project_read","question_read","deliverable_read"})
      */
     private $deadline;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime",nullable=true)
+     * @Groups({"project_read","question_read","deliverable_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Deliverable::class, mappedBy="project", orphanRemoval=true)
+     * @Groups({"project_read","question_read"})
      */
     private $deliverables;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="projects")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"project_read","question_read","deliverable_read"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Classroom::class, inversedBy="projects")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"project_read","question_read"})
      */
     private $classroom;
 
     /**
      * @ORM\OneToMany(targetEntity=Question::class, mappedBy="project")
+     * @Groups({"project_read"})
      */
     private $question;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"project_read"})
      */
     private $isActif;
 

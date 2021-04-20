@@ -5,10 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CommentRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert ;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"comment_read"}}
+ * )
  */
 class Comment
 {
@@ -16,22 +20,27 @@ class Comment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"comment_read","post_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"comment_read","post_read"})
+     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"comment_read","post_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"comment_read","post_read"})
      */
     private $user;
 

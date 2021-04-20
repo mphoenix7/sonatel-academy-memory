@@ -7,10 +7,14 @@ use App\Repository\ClassroomRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ClassroomRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"classrooms_read"}}
+ * )
  */
 class Classroom
 {
@@ -18,22 +22,27 @@ class Classroom
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"classrooms_read","cohort_read","project_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
+     * @Groups({"classrooms_read","cohort_read","project_read"})
      */
     private $name;
 
     /**
      * @ORM\ManyToOne(targetEntity=Branch::class, inversedBy="classroom")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
      */
     private $branch;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="classroom")
+     * @Groups({"classrooms_read","cohort_read"})
      */
     private $user;
 
@@ -45,6 +54,7 @@ class Classroom
     /**
      * @ORM\ManyToOne(targetEntity=Cohort::class, inversedBy="classrooms")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
      */
     private $cohort;
 

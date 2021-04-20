@@ -7,10 +7,14 @@ use App\Repository\DeliverableRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert ;
 
 /**
  * @ORM\Entity(repositoryClass=DeliverableRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"deliverable_read"}}
+ * )
  */
 class Deliverable
 {
@@ -18,43 +22,53 @@ class Deliverable
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"deliverable_read","project_read","feedback_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=2000)
+     * @Groups({"deliverable_read","project_read","feedback_read"})
+     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
      */
     private $link;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"deliverable_read","project_read","feedback_read"})
+     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
      */
     private $description;
 
     /**
      * @ORM\Column(type="blob", nullable=true)
+     * @Groups({"deliverable_read","project_read","feedback_read"})
      */
     private $file;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"deliverable_read","project_read","feedback_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Feedback::class, mappedBy="deliverable", orphanRemoval=true)
+     * @Groups({"deliverable_read","project_read"})
      */
     private $feedback;
 
     /**
      * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="deliverables")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"deliverable_read"})
      */
     private $project;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="deliverables")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"deliverable_read","project_read"})
      */
     private $user;
 

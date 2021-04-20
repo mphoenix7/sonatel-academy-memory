@@ -5,9 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\QuestionRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"question_read"}}
+ * )
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
  */
 class Question
@@ -16,27 +19,32 @@ class Question
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"question_read","project_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"question_read","project_read"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"question_read","project_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="questions")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"question_read","project_read"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="question")
+     * @Groups({"question_read"})
      */
     private $project;
 

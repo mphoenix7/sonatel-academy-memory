@@ -6,11 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CohortRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CohortRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"cohort_read"}}
+ * )
  */
 class Cohort
 {
@@ -18,26 +22,32 @@ class Cohort
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"cohort_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
+     * @Groups({"cohort_read"})
      */
     private $name;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date",nullable=true)
+     * @Groups({"cohort_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"cohort_read"})
      */
     private $isActif;
 
     /**
      * @ORM\OneToMany(targetEntity=Classroom::class, mappedBy="cohort", orphanRemoval=true)
+     * @Groups({"cohort_read"})
      */
     private $classrooms;
 

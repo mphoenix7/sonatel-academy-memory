@@ -63,7 +63,6 @@ class UserCreatedEventListener implements EventSubscriberInterface {
             $generatedpassword = $password;
 
             if ($subject instanceof User && $method === 'POST'){
-                
                 $subject->setPassword($this->encoder->encodePassword($subject ,$password));
 
                 $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
@@ -77,11 +76,10 @@ class UserCreatedEventListener implements EventSubscriberInterface {
                 $this->mailer->send($email);
                 
             }
-            if($subject instanceof User && $event->getRequest()->getMethod() === "PUT") {
-                if(!empty($subject->getPassword())){
-                    $subject->setPassword($this->encoder->encodePassword($subject, $subject->getPassword()));
-                }
-
+            if($subject instanceof User && $event->getRequest()->getMethod() === "PUT"){
+                $subject->setPassword($this->encoder->encodePassword($subject,$subject->getPassword()));
+                $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
+                dd($subject);
             }
         }
         else {

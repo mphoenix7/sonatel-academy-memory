@@ -2,17 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={ "groups"={"users_read"}}
+ * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email", message="cet email existe deja")
  */
@@ -22,62 +26,73 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="ce champs est obligatoire")
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string",nullable=true)
+     * @Groups({"users_read"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="ce champs est obligatoire")
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="ce champs est obligatoire")
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="ce champs est obligatoire")
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read"})
      */
     private $dateOfBirth;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read"})
      */
     private $placeOfBirth;
 
     /**
      * @ORM\Column(type="boolean")
      * @Assert\NotBlank(message="ce champs ne peut pas etre nul")
+     *
      */
     private $isActif;
 
     /**
      * @ORM\Column(type="array", nullable=true)
+     * @Groups({"users_read","classrooms_read","cohort_read","comment_read"})
      */
     private $sex = [];
 
