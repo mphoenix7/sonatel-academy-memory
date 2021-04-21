@@ -2,6 +2,9 @@
 
 namespace App\Events;
 use App\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -36,11 +39,10 @@ class UserCreatedEventListener implements EventSubscriberInterface {
     }
 
     /**
+     * @return array|array[]
      * Branchement sur l'evenement kernel view \
      * avant ecritre dans la base de donnee pour
      * generer un mot de passe et envoyer l'utilisateur un mail
-     *
-     * @return void
      */
     public static function getSubscribedEvents():array {
         return [
@@ -49,41 +51,40 @@ class UserCreatedEventListener implements EventSubscriberInterface {
     }
 
     /**
-     * intervention sur la creaion du mot de passe pour l'encoder
-     *
      * @param ViewEvent $event
-     * @return void
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     * @return Response
+     * @throws TransportExceptionInterface
      */
     public function passwordEncoder (ViewEvent $event){
-        if($this->security->getUser()->getRoles() == ['ROLE_ADMIN'] || $this->security->getUser()->getRoles() == ["ROLE_COACH"] ){
-            $subject = $event->getControllerResult();
-            $method = $event->getRequest()->getMethod();
+        $subject = $event->getControllerResult();
+        $method = $event->getRequest()->getMethod();
+        if( $subject instanceof User && $method == "POST"){
+            if ($this->security->getUser()->getRoles() == ["ROLE_APPRENANT"]){
+                return new Response("opération non authorisé",401);
+            }
             $password = uniqid();
             $generatedpassword = $password;
+            $subject->setPassword($this->encoder->encodePassword($subject ,$password));
 
-            if ($subject instanceof User && $method === 'POST'){
-                $subject->setPassword($this->encoder->encodePassword($subject ,$password));
+            $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
 
-                $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
+            //Envoie de l'email à l'utilisateur
+            $email = (new Email())
+                ->from("sonatel-academy@mail.com")
+                ->to($subject->getEmail())
+                ->subject('Creation compte Plateform Apprenat Academy')
+                ->text("Veuillez vous connecter avec votre email et ce mot de passe {$generatedpassword}");
+            $this->mailer->send($email);
 
-                //Envoie de l'email à l'utilisateur 
-                $email = (new Email())
-                       ->from("sonatel-academy@mail.com")
-                       ->to($subject->getEmail())
-                       ->subject('Creation compte Plateform Apprenat Academy')
-                       ->text("Veuillez vous connecter avec votre email et ce mot de passe {$generatedpassword}");
-                $this->mailer->send($email);
-                
-            }
-            if($subject instanceof User && $event->getRequest()->getMethod() === "PUT"){
-                $subject->setPassword($this->encoder->encodePassword($subject,$subject->getPassword()));
-                $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
-                dd($subject);
-            }
         }
-        else {
-            throw new AccessDeniedException("Tu n'est pas authoriser à effectuer cette operation");
+        if($subject instanceof User && $event->getRequest()->getMethod() === "PUT"){
+            if ($this->security->getUser()->getRoles() == ["ROLE_APPRENANT"]){
+                throw new UnauthorizedHttpException("","opération non authorisé",null,403);
+            }
+            $subject->setPassword($this->encoder->encodePassword($subject,$subject->getPassword()));
+            $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
+
         }
+
     }
 }

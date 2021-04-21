@@ -23,6 +23,10 @@ class CohortCreateEventListener implements EventSubscriberInterface {
         $this->security = $security;
     }
 
+    /**
+     * @return array|array[]
+     * On se branche dans l'evenement kernel.view avant ecriture dans la base de donnee
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -30,14 +34,17 @@ class CohortCreateEventListener implements EventSubscriberInterface {
         ];
     }
 
+    /**
+     * @param ViewEvent $event
+     * logique à ajouter dans l'evenement
+     */
     public function onCohortCreate(ViewEvent $event) {
-        if($this->security->getUser()->getRoles() != ["ROLE_ADMIN"]){
-            throw new UnauthorizedHttpException("","tu n'est pas authaurisé à effectuer cette operation",null,403);
-        }
         $subject = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-
         if($subject instanceof Cohort && $method == "POST"){
+            if($this->security->getUser()->getRoles() != ["ROLE_ADMIN"]){
+                throw new UnauthorizedHttpException("","tu n'est pas authaurisé à effectuer cette operation",null,403);
+            }
             $subject->setCreatedAt( new \DateTime());
             $subject->setIsActif(true);
         }
