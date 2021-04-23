@@ -13,10 +13,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Class CohortCreateEventListener intervient pour creer la date
+ * Class CohortCreateListener intervient pour creer la date
  * @package App\Events
  */
-class CohortCreateEventListener implements EventSubscriberInterface {
+class CohortCreateListener implements EventSubscriberInterface {
     private  $security;
     public function __construct(Security $security)
     {

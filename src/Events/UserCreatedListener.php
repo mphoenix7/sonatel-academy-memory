@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserCreatedEventListener implements EventSubscriberInterface {
+class UserCreatedListener implements EventSubscriberInterface {
     /**
      * @var UserPasswordEncoderInterface
      */

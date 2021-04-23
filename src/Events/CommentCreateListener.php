@@ -27,6 +27,7 @@ class CommentCreateListener implements EventSubscriberInterface
 
     public function onCommentCreate(ViewEvent $event) {
         $subject = $event->getControllerResult();
+        //dd($subject);
         $method  = $event->getRequest()->getMethod();
         $user    = $this->security->getUser();
         if($subject instanceof Comment && $method == "POST"){

@@ -46,9 +46,11 @@ class Comment
 
     /**
      * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="comment")
-     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"comment_read"})
      */
     private $post;
+
+
 
     public function getId(): ?int
     {
@@ -102,4 +104,6 @@ class Comment
 
         return $this;
     }
+
+
 }

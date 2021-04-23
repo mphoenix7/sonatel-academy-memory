@@ -36,7 +36,7 @@ class Deliverable
     /**
      * @ORM\Column(type="text")
      * @Groups({"deliverable_read","project_read","feedback_read"})
-     * @Assert\NotBlank(message="ce champs ne peut pas etre vide")
+     * @Assert\NotBlank(message="ce champs ne doit pas etre vide")
      */
     private $description;
 

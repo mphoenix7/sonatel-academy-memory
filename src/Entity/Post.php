@@ -53,7 +53,8 @@ class Post
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="post", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="post")
+     * @Groups({"post_read","comment_read"})
      */
     private $comment;
 
@@ -61,6 +62,7 @@ class Post
     {
         $this->comment = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -144,4 +146,6 @@ class Post
 
         return $this;
     }
+
+
 }
