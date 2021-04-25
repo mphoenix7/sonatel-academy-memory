@@ -3,7 +3,6 @@
 namespace App\Events;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
@@ -12,7 +11,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserCreatedListener implements EventSubscriberInterface {
@@ -65,7 +63,9 @@ class UserCreatedListener implements EventSubscriberInterface {
 
             $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
 
-            //Envoie de l'email à l'utilisateur
+            /**
+             * Envoie de l'email à l'utilisateur
+             */
             $email = (new Email())
                 ->from("sonatel-academy@mail.com")
                 ->to($subject->getEmail())

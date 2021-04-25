@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
 
-class onFeedbackCreate implements EventSubscriberInterface
+class FeedbackCreateListener implements EventSubscriberInterface
 {
     private $security;
     public function __construct(Security $security)

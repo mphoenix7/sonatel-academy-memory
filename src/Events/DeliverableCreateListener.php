@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
 
-class onDeliverableCreate implements EventSubscriberInterface
+class DeliverableCreateListener implements EventSubscriberInterface
 {
 
     private $security;
@@ -24,7 +24,7 @@ class onDeliverableCreate implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return [KernelEvents::VIEW => ['onDeliverableCreate',EventPriorities::PRE_WRITE]];
+        return [KernelEvents::VIEW => ['DeliverableCreateListener',EventPriorities::PRE_WRITE]];
     }
 
     public function onDeliverableCreate(ViewEvent $event) {
