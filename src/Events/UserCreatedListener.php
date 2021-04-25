@@ -59,9 +59,6 @@ class UserCreatedListener implements EventSubscriberInterface {
         $subject = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
         if( $subject instanceof User && $method == "POST"){
-            if ($this->security->getUser()->getRoles() == ["ROLE_APPRENANT"]){
-                return new Response("opération non authorisé",401);
-            }
             $password = uniqid();
             $generatedpassword = $password;
             $subject->setPassword($this->encoder->encodePassword($subject ,$password));
@@ -78,9 +75,6 @@ class UserCreatedListener implements EventSubscriberInterface {
 
         }
         if($subject instanceof User && $event->getRequest()->getMethod() === "PUT"){
-            if ($this->security->getUser()->getRoles() == ["ROLE_APPRENANT"]){
-                throw new UnauthorizedHttpException("","opération non authorisé",null,403);
-            }
             $subject->setPassword($this->encoder->encodePassword($subject,$subject->getPassword()));
             $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
 

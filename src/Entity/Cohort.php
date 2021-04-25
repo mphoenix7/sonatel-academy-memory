@@ -13,7 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass=CohortRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"cohort_read"}}
+ *     normalizationContext={"groups"={"cohort_read"}},
+ *     accessControl="is_granted('ROLE_ADMIN')"
  * )
  */
 class Cohort

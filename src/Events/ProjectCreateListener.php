@@ -35,7 +35,6 @@ class ProjectCreateListener implements EventSubscriberInterface
 
     /**
      * @param ViewEvent $event
-     * logique à effectuer dans l'evenement
      */
     public function onProjectCreate(ViewEvent $event) {
 
@@ -43,11 +42,9 @@ class ProjectCreateListener implements EventSubscriberInterface
        $method  = $event->getRequest()->getMethod();
        $user    = $this->security->getUser();
        if($subject instanceof Project && $method == "POST"){
-           if($this->security->getUser()->getRoles() == ["ROLE_APPRENANT"]){
-               throw new UnauthorizedHttpException("","opération non authorisé",null,403);
-           }
            $subject->setUser($user);
            $subject->setCreatedAt(new \DateTime());
+           $subject->setIsActif(true);
        }
 
 

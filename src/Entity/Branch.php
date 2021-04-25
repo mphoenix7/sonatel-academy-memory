@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=BranchRepository::class)
  * @ApiResource(
+ *     accessControl="is_granted('ROLE_ADMIN')",
  *     normalizationContext={"groups"={"branch_read"}}
  * )
  */

@@ -10,6 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert ;
 
 /**
  * @ApiResource(
+ *     collectionOperations={
+            "post"={"access_control"="is_granted('ROLE_ADMIN','ROLE_COACH')"},
+ *          "get"={"access_control"="is_granted('ROLE_ADMIN','ROLE_COACH')"}
+ *     },
+ *     itemOperations={
+            "get"={"acces_control"="is_granted('GET',previous_object)"},
+ *          "put"={"access_control"="is_granted('ROLE_COACH','ROLE_ADMIN')"},
+ *          "delete"={"access_control"="is_granted('ROLE_COACH','ROLE_ADMIN')"}
+ *     },
  *     normalizationContext={"groups"={"feedback_read"}}
  * )
  * @ORM\Entity(repositoryClass=FeedbackRepository::class)

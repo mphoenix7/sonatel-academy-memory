@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
 
+
 class PostCreateListener implements EventSubscriberInterface
 {
     private $security ;
@@ -36,6 +37,10 @@ class PostCreateListener implements EventSubscriberInterface
         if($subject instanceof Post && $method == "POST"){
             $subject->setUser($user);
             $subject->setCreatedAt(new \DateTime());
+            if($user->getRoles() == ['ROLE_APPRENANT']){
+                $subject->setClassroom($user->getClassroom());
+            }
         }
+//
     }
 }

@@ -11,6 +11,11 @@ use Symfony\Component\Validator\Constraints as Assert ;
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  * @ApiResource(
+ *    itemOperations={
+ *     "get",
+ *     "put"={"access_control"="is_granted('EDIT', previous_object)"},
+ *     "delete"={"access_control"="is_granted('DELETE', previous_object)"}
+ *     },
  *     normalizationContext={"groups"={"comment_read"}}
  * )
  */

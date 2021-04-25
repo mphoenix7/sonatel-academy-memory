@@ -32,9 +32,6 @@ class onDeliverableCreate implements EventSubscriberInterface
         $method  = $event->getRequest()->getMethod();
         $user    = $this->security->getUser();
         if($subject instanceof Deliverable && $method == "POST"){
-            if($user->getRoles() != ["ROLE_APPRENANT"]){
-                throw new UnauthorizedHttpException('',"unauthorized operation",null,403);
-            }
             $subject->setUser($user);
             $subject->setCreatedAt(new \DateTime());
         }

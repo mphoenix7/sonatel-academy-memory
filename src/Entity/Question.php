@@ -9,6 +9,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *     itemOperations={
+ *     "get",
+ *     "put"={"access_control"="is_granted('EDIT', previous_object)"},
+ *     "delete"={"access_control"="is_granted('DELETE', previous_object)"}
+ *     },
  *     normalizationContext={"groups"={"question_read"}}
  * )
  * @ORM\Entity(repositoryClass=QuestionRepository::class)

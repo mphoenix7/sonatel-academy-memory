@@ -42,9 +42,6 @@ class CohortCreateListener implements EventSubscriberInterface {
         $subject = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
         if($subject instanceof Cohort && $method == "POST"){
-            if($this->security->getUser()->getRoles() != ["ROLE_ADMIN"]){
-                throw new UnauthorizedHttpException("","tu n'est pas authaurisé à effectuer cette operation",null,403);
-            }
             $subject->setCreatedAt( new \DateTime());
             $subject->setIsActif(true);
         }

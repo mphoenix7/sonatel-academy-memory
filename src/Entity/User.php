@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
@@ -15,7 +14,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
- *     normalizationContext={ "groups"={"users_read"}}
+ *     normalizationContext={ "groups"={"users_read"}},
+ *     accessControl="is_granted('ROLE_ADMIN','ROLE_COACH')"
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email", message="cet email existe deja")

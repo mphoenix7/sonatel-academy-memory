@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
 class CommentCreateListener implements EventSubscriberInterface
@@ -27,7 +28,6 @@ class CommentCreateListener implements EventSubscriberInterface
 
     public function onCommentCreate(ViewEvent $event) {
         $subject = $event->getControllerResult();
-        //dd($subject);
         $method  = $event->getRequest()->getMethod();
         $user    = $this->security->getUser();
         if($subject instanceof Comment && $method == "POST"){

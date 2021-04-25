@@ -53,10 +53,16 @@ class Post
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="post")
-     * @Groups({"post_read","comment_read"})
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="post",cascade={"persist", "remove"})
+     * @Groups({"post_read"})
      */
     private $comment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Classroom::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $classroom;
 
     public function __construct()
     {
@@ -143,6 +149,18 @@ class Post
                 $comment->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClassroom(): ?Classroom
+    {
+        return $this->classroom;
+    }
+
+    public function setClassroom(?Classroom $classroom): self
+    {
+        $this->classroom = $classroom;
 
         return $this;
     }

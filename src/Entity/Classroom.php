@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=ClassroomRepository::class)
  * @ApiResource(
+ *     accessControl="is_granted('ROLE_ADMIN')",
  *     normalizationContext={"groups"={"classrooms_read"}}
  * )
  */
@@ -58,10 +59,16 @@ class Classroom
      */
     private $cohort;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="classroom", orphanRemoval=true)
+     */
+    private $posts;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,6 +168,36 @@ class Classroom
     public function setCohort(?Cohort $cohort): self
     {
         $this->cohort = $cohort;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setClassroom($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getClassroom() === $this) {
+                $post->setClassroom(null);
+            }
+        }
 
         return $this;
     }
