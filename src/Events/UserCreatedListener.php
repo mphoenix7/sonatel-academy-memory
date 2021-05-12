@@ -2,8 +2,6 @@
 
 namespace App\Events;
 use App\Entity\User;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -47,11 +45,11 @@ class UserCreatedListener implements EventSubscriberInterface {
             KernelEvents::VIEW => ['passwordEncoder',EventPriorities::PRE_WRITE]
         ];
     }
-
+  
     /**
      * @param ViewEvent $event
-     * @return Response
-     * @throws TransportExceptionInterface
+     *
+     * 
      */
     public function passwordEncoder (ViewEvent $event){
         $subject = $event->getControllerResult();
@@ -69,12 +67,13 @@ class UserCreatedListener implements EventSubscriberInterface {
             $email = (new Email())
                 ->from("sonatel-academy@mail.com")
                 ->to($subject->getEmail())
-                ->subject('Creation compte Plateform Apprenat Academy')
+                ->subject('Creation compte Plateform Apprenant Academy')
                 ->text("Veuillez vous connecter avec votre email et ce mot de passe {$generatedpassword}");
             $this->mailer->send($email);
 
         }
-        if($subject instanceof User && $event->getRequest()->getMethod() === "PUT"){
+        if($subject instanceof User && $event->getRequest()->getMethod() === "PATCH"){
+            //dd($subject->getPassword());
             $subject->setPassword($this->encoder->encodePassword($subject,$subject->getPassword()));
             $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
 

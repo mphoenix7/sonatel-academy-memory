@@ -14,8 +14,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
+ *     itemOperations={
+ *          "get"={"access_control"="is_granted('ROLE_ADMIN','ROLE_COACH')"},
+ *          "patch"={"access_control"="is_granted('ROLE_ADMIN','ROLE_COACH')"},
+ *          "delete"={"access_control"="is_granted('ROLE_ADMIN','ROLE_COACH')"}
+ *      },
  *     normalizationContext={ "groups"={"users_read"}},
  *     accessControl="is_granted('ROLE_ADMIN','ROLE_COACH')"
+ *      
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email", message="cet email existe deja")

@@ -26,11 +26,12 @@ class AppFixtures extends Fixture
             $manager->persist($profil);
 
             if($i == 0){
+                $password = "password";
                 $user = new User();
                 $user->setFirstName("Omar")
                      ->setLastName("Diallo")
                      ->setEmail("omzard10@gmail.com")
-                     ->setPassword($this->encoder->encodePassword($user,"passwordencoded"))
+                     ->setPassword($this->encoder->encodePassword($user,$password))
                      ->setIsActif(true)
                      ->setPhoneNumber("773662180")
                      ->setProfil($profil)
