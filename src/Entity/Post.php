@@ -13,6 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert ;
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  * @ApiResource(
+ *     itemOperations={
+        "get",
+ *      "put"={"security"="is_granted('EDIT',object)"},
+ *      "delete"={"security"="is_granted('DELETE',object)"}
+ *     },
  *     normalizationContext={"groups"={"post_read"}}
  * )
  */

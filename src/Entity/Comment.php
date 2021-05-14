@@ -13,8 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert ;
  * @ApiResource(
  *    itemOperations={
  *     "get",
- *     "put"={"access_control"="is_granted('EDIT', previous_object)"},
- *     "delete"={"access_control"="is_granted('DELETE', previous_object)"}
+ *     "put"={"security"="is_granted('EDIT', object)"},
+ *     "delete"={"security"="is_granted('DELETE', object)"}
  *     },
  *     normalizationContext={"groups"={"comment_read"}}
  * )
