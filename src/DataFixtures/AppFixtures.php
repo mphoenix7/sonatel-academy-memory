@@ -19,7 +19,7 @@ class AppFixtures extends Fixture
     
     public function load(ObjectManager $manager)
     {
-        $role_array = ["ADMIN","COACH","APPRENANT"];
+        $role_array = ["ADMIN","FORMATEUR","APPRENANT"];
         for ($i=0; $i < count($role_array); $i++) { 
             $profil = new Profil();
             $profil->setName($role_array[$i]);

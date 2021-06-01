@@ -73,11 +73,11 @@ class UserCreatedListener implements EventSubscriberInterface {
 
         }
         if($subject instanceof User && $event->getRequest()->getMethod() === "PATCH"){
-            //dd($subject->getPassword());
             $subject->setPassword($this->encoder->encodePassword($subject,$subject->getPassword()));
             $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
 
         }
+
 
     }
 }

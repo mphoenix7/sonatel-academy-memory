@@ -18,8 +18,7 @@ class UserAccessVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
+
         return in_array($attribute, [ 'PASSWORD_RESET'])
             && $subject instanceof User;
     }
@@ -28,7 +27,8 @@ class UserAccessVoter extends Voter
     {
         $user = $token->getUser();
 
-        // if the user is anonymous, do not grant access
+
+
         if (!$user instanceof UserInterface) {
             return false;
         }

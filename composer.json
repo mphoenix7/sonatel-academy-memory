@@ -74,7 +74,7 @@
             "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts"
+            "@auto-scripts"zzzz
         ]
     },
     "conflict": {

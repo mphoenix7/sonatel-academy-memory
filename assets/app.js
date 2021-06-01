@@ -1,23 +1,24 @@
-import "./styles/app.css";
-import "./bootstrap";
-import React, { useEffect } from "react";
+import React, {useState} from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
+import {HashRouter, Route, Switch} from "react-router-dom";
+import Login from "./pages/login";
+import AuthAPI from "./services/AuthAPI";
+import Home from "./pages/Home";
+
+
+AuthAPI.setUpAuth();
 
 const App = () => {
-  useEffect(() => {
-    let getUsers = fetch("http://localhost:8000/api/users", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
-      mode: "no-cors",
-    }).then((response) => console.log(response.json()));
-  }, []);
-  return (
-    <>
-      <h1>it works</h1>
-    </>
-  );
+    const [isAuthenticated, setIsAuthenticated] = useState(AuthAPI.isAuthenticated());
+
+    return (
+        <HashRouter>
+            <Switch>
+                <Route path="/home" render={(props) => <Home {...props}/>}/>
+                <Route path="/" render={(props) => <Login onLogIn={setIsAuthenticated} {...props}/>}/>
+            </Switch>
+        </HashRouter>
+    );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App/>, document.getElementById("root"));

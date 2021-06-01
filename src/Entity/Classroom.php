@@ -42,7 +42,7 @@ class Classroom
     private $branch;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="classroom")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="classroom",cascade={"persist", "remove"})
      * @Groups({"classrooms_read","cohort_read"})
      */
     private $user;

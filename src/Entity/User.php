@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
@@ -18,6 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "get"={"security"="is_granted('ROLE_ADMIN','ROLE_COACH')"},
  *          "patch"={"security"="is_granted('PASSWORD_RESET',object)"},
  *          "delete"={"security"="is_granted('ROLE_ADMIN','ROLE_COACH')"}
+ *
  *      },
  *     normalizationContext={ "groups"={"users_read"}},
  *
@@ -30,6 +32,7 @@ class User implements UserInterface
 {
     /**
      * @ORM\Id
+     * @ApiProperty(identifier=true)
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
@@ -52,7 +55,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string",nullable=true)
-     * @Groups({"users_read"})
+     * @Groups({"users_read","password_reset"})
      */
     private $password;
 
@@ -96,11 +99,7 @@ class User implements UserInterface
      */
     private $isActif;
 
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     * @Groups({"users_read","classrooms_read","cohort_read","comment_read"})
-     */
-    private $sex = [];
+
 
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="user")
@@ -143,6 +142,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Project::class, mappedBy="user", orphanRemoval=true)
      */
     private $projects;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sex;
 
     public function __construct()
     {
@@ -307,17 +311,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSex(): ?array
-    {
-        return $this->sex;
-    }
 
-    public function setSex(?array $sex): self
-    {
-        $this->sex = $sex;
-
-        return $this;
-    }
 
     public function getProfil(): ?Profil
     {
@@ -519,6 +513,18 @@ class User implements UserInterface
                 $project->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSex(): ?string
+    {
+        return $this->sex;
+    }
+
+    public function setSex(?string $sex): self
+    {
+        $this->sex = $sex;
 
         return $this;
     }
