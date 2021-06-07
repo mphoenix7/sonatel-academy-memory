@@ -15,6 +15,7 @@ const authenticate = (credentials) => {
 const logout = () => {
     window.localStorage.removeItem("authToken");
     delete axios.defaults.headers["Authorization"]
+
 }
 
 //verifie et persiste le token dans la navigateur du client
@@ -32,7 +33,6 @@ const setUpAuth = () => {
 const isAuthenticated = () => {
     const token = window.localStorage.getItem("authToken");
     if (token) {
-
         const {exp: expirationDate} = jwtDecode(token)
         if (expirationDate * 1000 > new Date().getTime()) {
            return true
@@ -41,7 +41,10 @@ const isAuthenticated = () => {
             return false;
         }
     }
-    return false
+    else {
+       return false
+    }
+
 }
 
 

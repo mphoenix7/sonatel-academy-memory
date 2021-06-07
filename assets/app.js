@@ -1,23 +1,30 @@
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
-import {HashRouter, Route, Switch} from "react-router-dom";
-import Login from "./pages/login";
+import {HashRouter, Redirect, Route, Switch} from "react-router-dom";
+import LoginPage from "./pages/Login/LoginPage";
 import AuthAPI from "./services/AuthAPI";
-import Home from "./pages/Home";
+import Home from "./pages/Home/HomePage";
+import AuthContext from "./Datashare/AuthContext"
+import HomePage from "./pages/Home/HomePage";
 
 
 AuthAPI.setUpAuth();
+
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(AuthAPI.isAuthenticated());
 
     return (
-        <HashRouter>
-            <Switch>
-                <Route path="/home" render={(props) => <Home {...props}/>}/>
-                <Route path="/" render={(props) => <Login onLogIn={setIsAuthenticated} {...props}/>}/>
-            </Switch>
-        </HashRouter>
+        <AuthContext.Provider value={{isAuthenticated,setIsAuthenticated}}>
+            <HashRouter>
+                <Switch>
+                    <Route path="/home"
+                           render={(props) => isAuthenticated ? <HomePage {...props} /> :
+                               <Redirect to="/"/>}/>
+                    <Route path="/" render={(props) => <LoginPage  {...props}/>}/>
+                </Switch>
+            </HashRouter>
+        </AuthContext.Provider>
     );
 };
 
