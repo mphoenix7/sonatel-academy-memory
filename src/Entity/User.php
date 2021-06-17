@@ -17,13 +17,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  *     itemOperations={
  *          "get"={"security"="is_granted('ROLE_ADMIN','ROLE_COACH')"},
- *          "patch"={"security"="is_granted('PASSWORD_RESET',object)"},
+ *          "put"={"security"="is_granted('PASSWORD_RESET',object)"},
  *          "delete"={"security"="is_granted('ROLE_ADMIN','ROLE_COACH')"}
  *
  *      },
- *     normalizationContext={ "groups"={"users_read"}},
+ *     normalizationContext={"groups"={"users_read"}},
  *
- *      
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email", message="cet email existe deja")
@@ -42,6 +41,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="ce champs est obligatoire")
+     * @Assert\Email(message= "format invalid")
      * @Groups({"users_read","classrooms_read","cohort_read","comment_read","post_read","comment_read","project_read","question_read","deliverable_read","feedback_read"})
      */
     private $email;
@@ -55,7 +55,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string",nullable=true)
-     * @Groups({"users_read","password_reset"})
+     * @Groups({"users_read"})
      */
     private $password;
 
@@ -94,7 +94,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="boolean")
-     * @Assert\NotBlank(message="ce champs ne peut pas etre nul")
+     *
      *
      */
     private $isActif;
@@ -105,6 +105,7 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="user")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="ce champs ne peut pas etre nul")
+     * @Groups({"users_read"})
      */
     private $profil;
 
@@ -145,6 +146,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"users_read"})
      */
     private $sex;
 
@@ -280,7 +282,7 @@ class User implements UserInterface
         return $this->dateOfBirth;
     }
 
-    public function setDateOfBirth(?\DateTimeInterface $dateOfBirth): self
+    public function setDateOfBirth( $dateOfBirth): self
     {
         $this->dateOfBirth = $dateOfBirth;
 

@@ -1,7 +1,9 @@
-<?php 
+<?php
 
 namespace App\Events;
+
 use App\Entity\User;
+use Laminas\EventManager\Event;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -11,7 +13,8 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserCreatedListener implements EventSubscriberInterface {
+class UserCreatedListener implements EventSubscriberInterface
+{
     /**
      * @var UserPasswordEncoderInterface
      */
@@ -28,10 +31,11 @@ class UserCreatedListener implements EventSubscriberInterface {
      */
     private $mailer;
 
-    public function __construct( MailerInterface $mailer , UserPasswordEncoderInterface $encoder , Security $security){
-        $this->encoder  = $encoder;
+    public function __construct(MailerInterface $mailer, UserPasswordEncoderInterface $encoder, Security $security)
+    {
+        $this->encoder = $encoder;
         $this->security = $security;
-        $this->mailer   = $mailer;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -40,26 +44,30 @@ class UserCreatedListener implements EventSubscriberInterface {
      * avant ecritre dans la base de donnee pour
      * generer un mot de passe et envoyer l'utilisateur un mail
      */
-    public static function getSubscribedEvents():array {
+    public static function getSubscribedEvents(): array
+    {
         return [
-            KernelEvents::VIEW => ['passwordEncoder',EventPriorities::PRE_WRITE]
+            KernelEvents::VIEW => [
+                'passwordEncoder', EventPriorities::PRE_WRITE,
+            ],
         ];
     }
-  
-    /**
-     * @param ViewEvent $event
-     *
-     * 
-     */
-    public function passwordEncoder (ViewEvent $event){
+
+
+
+    public function passwordEncoder(ViewEvent $event)
+    {
         $subject = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-        if( $subject instanceof User && $method == "POST"){
+
+        if ($subject instanceof User && $method == "POST") {
             $password = uniqid();
             $generatedpassword = $password;
-            $subject->setPassword($this->encoder->encodePassword($subject ,$password));
+            $subject->setPassword($this->encoder->encodePassword($subject, $password));
+            $subject->setIsActif(true);
 
-            $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
+            $subject->setRoles(["ROLE_" . $subject->getProfil()->getName()]);
+
 
             /**
              * Envoie de l'email à l'utilisateur
@@ -70,14 +78,10 @@ class UserCreatedListener implements EventSubscriberInterface {
                 ->subject('Creation compte Plateform Apprenant Academy')
                 ->text("Veuillez vous connecter avec votre email et ce mot de passe {$generatedpassword}");
             $this->mailer->send($email);
+        }
+        if ($subject instanceof User && $method === "PUT") {
+            $subject->setRoles(["ROLE_" . $subject->getProfil()->getName()]);
 
         }
-        if($subject instanceof User && $event->getRequest()->getMethod() === "PATCH"){
-            $subject->setPassword($this->encoder->encodePassword($subject,$subject->getPassword()));
-            $subject->setRoles(["ROLE_".$subject->getProfil()->getName()]);
-
-        }
-
-
     }
 }

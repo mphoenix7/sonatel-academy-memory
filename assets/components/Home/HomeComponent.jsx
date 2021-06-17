@@ -15,29 +15,41 @@ import {Button, Paper, ThemeProvider} from "@material-ui/core";
 import Badge from '@material-ui/core/Badge';
 import AuthAPI from "../../services/AuthAPI";
 import AuthContext from "../../Datashare/AuthContext";
-import {useStyles} from "../../pages/Home/HomePageStyle";
-import UserPage from "../User/UserPage";
-import {HashRouter, Route, Switch, NavLink, Redirect, Link} from "react-router-dom"
-import {AccountCircleOutlined, Dashboard, MailOutlined, NotificationsOutlined, PeopleOutline} from "@material-ui/icons";
+import {useStyles} from "./HomeComponentStyle";
+import UserComponent from "../../components/User/UserComponent";
+import {HashRouter,  Switch, NavLink} from "react-router-dom"
+import {
+    AccountCircleOutlined,
+    MailOutlined,
+    NotificationsOutlined,
+    PeopleOutline,
+    AssignmentIndOutlined
+} from "@material-ui/icons";
 import Customtheme from "../../styles/ThemeOverride";
+import ProfilComponent from "../../components/Profil/ProfilComponent";
+import ProtectedRoute from "../ProtectedRoute";
+import jwtDecode from "jwt-decode";
 
 
-const HomePage = ({history, window}) => {
+const HomeComponent = (props) => {
+    const {roles: profil} = jwtDecode(window.localStorage.getItem("authToken"))
     const classes = useStyles();
     const [mobileOpen, setMobileOpen] = useState(false);
 
 
-    const {setIsAuthenticated} = useContext(AuthContext);
+    const {setIsAuthenticated, isAuthenticated} = useContext(AuthContext);
 
     const handleLogOut = () => {
         AuthAPI.logout()
         setIsAuthenticated(false);
-        history.push("/")
+        props.history.push("/")
     }
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+
 
 
     const drawer = (
@@ -46,22 +58,25 @@ const HomePage = ({history, window}) => {
 
             <Divider/>
             <List>
-                    <ListItem  button color="primary" >
-                        <ListItemIcon>
-                            <PeopleOutline color="primary"/>
-                        </ListItemIcon>
-                        <NavLink className={classes.list} to="/home/user"> <ListItemText primary="Utilisateurs"/></NavLink>
-                        {/*<ListItemText primary="Utilisateurs"/>*/}
-
-
-                    </ListItem>
+                <ListItem button color="primary">
+                    <ListItemIcon>
+                        <PeopleOutline color="primary"/>
+                    </ListItemIcon>
+                    <NavLink className={classes.list} to="/home/user"> <ListItemText primary="Utilisateurs"/></NavLink>
+                </ListItem>
+                <ListItem button color="primary">
+                    <ListItemIcon>
+                        <AssignmentIndOutlined color="primary"/>
+                    </ListItemIcon>
+                    <NavLink className={classes.list} to="/home/profil"> <ListItemText primary="Profils"/></NavLink>
+                </ListItem>
 
             </List>
 
         </div>
     );
 
-    const container = window !== undefined ? () => window().document.body : undefined;
+    const container = props.window !== undefined ? () => window().document.body : undefined;
 
     return (
         <>
@@ -154,7 +169,11 @@ const HomePage = ({history, window}) => {
                     <Paper className={classes.componentContent} elevation={10}>
                         <HashRouter>
                             <Switch>
-                                <Route path="/home/user" component={UserPage}/>
+
+
+                                <ProtectedRoute path="/home/user" isAuthenticated={isAuthenticated} profil={profil} acceptedProfil="ROLE_ADMIN" component={UserComponent}/>
+                                <ProtectedRoute path="/home/profil" isAuthenticated={isAuthenticated} profil={profil} acceptedProfil="ROLE_ADMIN" component={ProfilComponent}/>
+
                             </Switch>
                         </HashRouter>
                     </Paper>
@@ -167,4 +186,4 @@ const HomePage = ({history, window}) => {
     )
 }
 
-export default HomePage;
+export default HomeComponent;

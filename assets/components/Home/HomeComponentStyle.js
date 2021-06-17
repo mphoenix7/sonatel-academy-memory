@@ -59,7 +59,8 @@ const useStyles = makeStyles((theme) => ({
     },
     list: {
         color: "#424242",
-        textDecoration: "none"
+        textDecoration: "none",
+        width:"100%"
     }
 }));
 

@@ -1,38 +1,45 @@
 import React, {useContext, useState} from "react";
-import {Avatar, Button, CssBaseline, Grid, Paper, TextField, ThemeProvider, Typography} from "@material-ui/core";
-import {LockOutlined} from "@material-ui/icons";
-import {useStyles} from "./LoginPageStyles"
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    Grid,
+    InputAdornment,
+    Paper,
+    TextField,
+    ThemeProvider,
+    Typography,
+} from "@material-ui/core";
+import {LockOutlined, MailOutlined} from "@material-ui/icons";
+import {useStyles} from "./LoginComponentStyles";
 import AuthAPI from "../../services/AuthAPI";
 import AuthContext from "../../Datashare/AuthContext";
 import Customtheme from "../../styles/ThemeOverride";
 
-
-const LoginPage = ({history}) => {
+const LoginComponent = ({history}) => {
     const classes = useStyles();
     const [credentials, setCredentials] = useState({
         username: "",
-        password: ""
-    })
+        password: "",
+    });
     const {setIsAuthenticated} = useContext(AuthContext);
     //Gestion des champs
     const handleChange = ({currentTarget}) => {
         const {name, value} = currentTarget;
-        setCredentials({...credentials, [name]: value})
-    }
+        setCredentials({...credentials, [name]: value});
+    };
     const [errorCheck, setErrorCheck] = useState(false);
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            await AuthAPI.authenticate(credentials)
-            setIsAuthenticated(true)
-            history.replace("/home")
-
+            await AuthAPI.authenticate(credentials);
+            setIsAuthenticated(true);
+            history.replace("/home");
         } catch (error) {
-            setErrorCheck(true)
+            setErrorCheck(true);
         }
-
-    }
+    };
 
     return (
         <ThemeProvider theme={Customtheme}>
@@ -56,10 +63,17 @@ const LoginPage = ({history}) => {
                             <Typography component="h1" variant="h5" color="primary">
                                 Connexion
                             </Typography>
-                            <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                            <form
+                                className={classes.form}
+                                noValidate
+                                onSubmit={handleSubmit}
+                                autoComplete="Off"
+                            >
                                 <TextField
                                     error={errorCheck}
-                                    helperText="adresse email ou mot de passe incorrect"
+                                    helperText={
+                                        errorCheck && " adresse email ou mot de passe incorrect"
+                                    }
                                     name="username"
                                     value={credentials.username}
                                     onChange={handleChange}
@@ -73,7 +87,12 @@ const LoginPage = ({history}) => {
                                     autoFocus
                                     color="secondary"
                                     InputProps={{
-                                        className: classes.input
+                                        className: classes.input,
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <MailOutlined color="primary"/>
+                                            </InputAdornment>
+                                        ),
                                     }}
                                 />
                                 <TextField
@@ -91,7 +110,12 @@ const LoginPage = ({history}) => {
                                     autoComplete="current-password"
                                     color="secondary"
                                     InputProps={{
-                                        className: classes.input
+                                        className: classes.input,
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <LockOutlined color="primary"/>
+                                            </InputAdornment>
+                                        ),
                                     }}
                                 />
 
@@ -100,21 +124,16 @@ const LoginPage = ({history}) => {
                                     variant="contained"
                                     className={classes.submit}
                                     type="submit"
-
                                 >
                                     Se connecter
                                 </Button>
-
-
                             </form>
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
         </ThemeProvider>
+    );
+};
 
-    )
-
-}
-
-export default LoginPage;
+export default LoginComponent;
