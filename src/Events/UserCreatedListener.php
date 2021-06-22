@@ -19,30 +19,23 @@ class UserCreatedListener implements EventSubscriberInterface
      * @var UserPasswordEncoderInterface
      */
     private $encoder;
+  
     /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * Undocumented variable
-     *
      * @var MailerInterface
      */
     private $mailer;
 
-    public function __construct(MailerInterface $mailer, UserPasswordEncoderInterface $encoder, Security $security)
+    public function __construct(MailerInterface $mailer, UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
-        $this->security = $security;
         $this->mailer = $mailer;
     }
 
     /**
      * @return array|array[]
      * Branchement sur l'evenement kernel view \
-     * avant ecritre dans la base de donnee pour
-     * generer un mot de passe et envoyer l'utilisateur un mail
+     * avant ecriture des donnees dans la base de donnee 
+     * 
      */
     public static function getSubscribedEvents(): array
     {
@@ -54,7 +47,12 @@ class UserCreatedListener implements EventSubscriberInterface
     }
 
 
-
+    /**
+     * encode le mot de passe de l'utilisateur et envoie un email contenant le mot de passe  de  l'utilsateur 
+     *
+     * @param ViewEvent $event
+     * @return void
+     */
     public function passwordEncoder(ViewEvent $event)
     {
         $subject = $event->getControllerResult();
@@ -76,9 +74,11 @@ class UserCreatedListener implements EventSubscriberInterface
                 ->from("sonatel-academy@mail.com")
                 ->to($subject->getEmail())
                 ->subject('Creation compte Plateform Apprenant Academy')
-                ->text("Veuillez vous connecter avec votre email et ce mot de passe {$generatedpassword}");
+                ->text("Veuillez vous connecter avec votre email et ce mot de passe:{$generatedpassword}");
             $this->mailer->send($email);
         }
+
+        //si on fait un update de l'utilisateur et qu'il y a un nouveau profil
         if ($subject instanceof User && $method === "PUT") {
             $subject->setRoles(["ROLE_" . $subject->getProfil()->getName()]);
 

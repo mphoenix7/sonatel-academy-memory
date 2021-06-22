@@ -41,7 +41,8 @@
         "symfony/var-dumper": "5.2.*",
         "symfony/web-profiler-bundle": "5.2.*",
         "symfony/webpack-encore-bundle": "^1.11",
-        "symfony/yaml": "5.2.*"
+        "symfony/yaml": "5.2.*",
+        "vich/uploader-bundle": "^1.18"
     },
     "config": {
         "optimize-autoloader": true,
@@ -74,7 +75,7 @@
             "@auto-scripts"
         ],
         "post-update-cmd": [
-            "@auto-scripts"zzzz
+            "@auto-scripts"
         ]
     },
     "conflict": {

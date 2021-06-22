@@ -21,7 +21,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "delete"={"security"="is_granted('ROLE_ADMIN','ROLE_COACH')"}
  *
  *      },
- *     normalizationContext={"groups"={"users_read"}},
+ *     normalizationContext={"groups"={"users_read"}}
  *
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)

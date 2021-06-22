@@ -216,9 +216,9 @@ const UserComponent = () => {
     <>
       <ThemeProvider theme={theme}>
         <div className={classes.content}>
-          <form noValidate className={classes.form}>
+          <form noValidate className={classes.SearchForm}>
             <TextField
-              className={classes.input}
+              className={classes.SearchInput}
               color="primary"
               value={search}
               onChange={handleSearchChange}
@@ -245,7 +245,6 @@ const UserComponent = () => {
               Creer
             </Button>
           </form>
-          <div className={classes.button}></div>
 
           <TableContainer className={classes.table}>
             <Table aria-label="simple table">
@@ -280,7 +279,7 @@ const UserComponent = () => {
                           color="primary"
                           variant="default"
                           Data
-                          label={user.roles.toString()}
+                          label={user.profil.name}
                         />
                       </TableCell>
                       <TableCell>
@@ -347,7 +346,7 @@ const UserComponent = () => {
                     placeholder="Prenom"
                     type="text"
                     fullWidth
-                    className={classes.item}
+                    className={classes.textField}
                     value={userData.firstName}
                     name="firstName"
                   />
@@ -359,7 +358,7 @@ const UserComponent = () => {
                     placeholder="Nom"
                     type="text"
                     fullWidth
-                    className={classes.item}
+                    className={classes.textField}
                     value={userData.lastName}
                     name="lastName"
                   />
@@ -371,7 +370,7 @@ const UserComponent = () => {
                     placeholder="Email"
                     type="email"
                     fullWidth
-                    className={classes.item}
+                    className={classes.textField}
                     value={userData.email}
                     name="email"
                   />
@@ -383,7 +382,7 @@ const UserComponent = () => {
                     placeholder="Numero de telephone"
                     type="text"
                     fullWidth
-                    className={classes.item}
+                    className={classes.textField}
                     value={userData.phoneNumber}
                     name="phoneNumber"
                   />
@@ -395,7 +394,7 @@ const UserComponent = () => {
                     id="date"
                     name="dateOfBirth"
                     label="Date de Naisance"
-                    className={classes.item}
+                    className={classes.textField}
                     value={userData.dateOfBirth}
                     defaultValue={userData.dateOfBirth}
                     InputLabelProps={{
@@ -412,7 +411,7 @@ const UserComponent = () => {
                     placeholder="Lieu de Naissance"
                     type="text"
                     fullWidth
-                    className={classes.item}
+                    className={classes.textField}
                     value={userData.placeOfBirth}
                     name="placeOfBirth"
                   />
@@ -446,7 +445,7 @@ const UserComponent = () => {
                     error={error.profil}
                     helperText={error.profil}
                     onChange={handleSelectChange}
-                    className={classes.item}
+                    className={classes.textField}
                     select
                     value={userData.profil}
                     helperText="choisir le profil de l'utilisteur"

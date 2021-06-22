@@ -43,7 +43,13 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    - { path: ^/api/users, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/api/password_reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    #- { path: ^/api/project, roles: [ROLE_ADMIN,ROLE_COACH] }
-    #- { path: ^/api/deliverable, roles: [ROLE_ADMIN,ROLE_COACH] }
+    - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
+    #- { path: ^/api/password_reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/api/projects, roles: [IS_AUTHENTICATED_FULLY] }
+    - { path: ^/api/deliverables, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/profils, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/questions, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/branches, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/posts, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/feedback, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/comments, roles: IS_AUTHENTICATED_FULLY }
